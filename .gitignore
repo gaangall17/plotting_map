@@ -1,0 +1,4 @@
+data/
+venv_plotting_map/
+_pycache_/
+*.html
