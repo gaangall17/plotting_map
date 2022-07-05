@@ -54,41 +54,71 @@ def get_locations(path):
     return text, x, y
 
 
-def get_assets(path):
-    locations = pd.read_csv(path)
-    locations = locations[['id','name','lat','long']]
+def get_links(path_locations, path_assets, path_links):
+    locations = pd.read_csv(path_locations)
+    locations = locations[['id','lat','long']]
+    locations = locations.dropna(subset = ['lat'])
     locations = locations.set_index('id')
-    print(locations.head(5))
+
+    assets = pd.read_csv(path_assets)
+    assets = assets[['id','<location_id>']]
+    assets = assets.dropna(subset = ['<location_id>'])
+    assets = assets.set_index('<location_id>')
+
+    df = pd.merge(locations, assets, left_index=True, right_index=True)
+
+    links = pd.read_csv(path_links)
+    links = links[['id','equip1_slave_id','equip2_master_id','link_protocol','link_type']]
+    links = links.dropna(subset = ['equip1_slave_id','equip2_master_id','link_type'])
+
+    type = []
+    x1 = []
+    y1 = []
+    x2 = []
+    y2 = []
+    for index, row in links.iterrows():
+        if df[df['id']==row[1]]['long'].values.any() and df[df['id']==row[2]]['long'].values.any():
+            type.append(row[4])
+
+            xi, yi = longlat_to_mercator.transform(df[df['id']==row[1]]['long'].values, df[df['id']==row[1]]['lat'].values)
+            x1.append(xi)
+            y1.append(yi)
+
+            xi, yi = longlat_to_mercator.transform(df[df['id']==row[2]]['long'].values, df[df['id']==row[2]]['lat'].values)
+            x2.append(xi)
+            y2.append(yi)
+
+    return type, x1, y1, x2, y2
 
 
 def run():
     
     text, x, y = get_locations('./data/locations.csv')
-    print(text)
-    print(x)
-    print(y)
-    init_x, init_y = longlat_to_mercator.transform(INIT_LONG, INIT_LAT)
-    final_x, final_y = longlat_to_mercator.transform(FINAL_LONG, FINAL_LAT)
 
-    #text = ['E1', 'E2', 'E3', 'E4', 'E5']
-    #N = len(text)
-
-    #x = np.linspace(init_x, final_x, N)
-    #y = np.linspace(init_y, final_y, N)
+    type, x1, x2, y1, y2 = get_links('./data/locations.csv','./data/assets.csv','./data/links.csv')
 
     x_range, y_range = get_square_window(x, y)
 
     source = ColumnDataSource(dict(x=x, y=y, text=text))
     glyph = Text(x="x", y="y", text="text", angle=0, text_color="black", text_font_size='10px')
 
-    # range bounds supplied in web mercator coordinates
     p = figure(x_range=x_range, y_range=y_range, x_axis_type="mercator", y_axis_type="mercator", plot_width=1200, plot_height=600)
     p.add_tile(tile_provider)
-
-    p.line(x[0:2],y[0:2], color='black')
     p.circle(x=x, y=y, size=15, color='blue')
     p.add_glyph(source, glyph)
 
+    x_circle = []
+    y_circle = []
+
+    for i in range(len(type)):
+
+        if 'radio' in type[i]:
+            p.line([x1[i], y1[i]],[x2[i], y2[i]], color='black')
+        else:
+            x_circle.append(x1[i])
+            y_circle.append(y1[i])
+    
+    p.circle(x=x_circle, y=y_circle, size=20, alpha=0.5, color='orange')
     show(p)
 
 
