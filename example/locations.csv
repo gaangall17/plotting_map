@@ -1,0 +1,101 @@
+id,type_id,name,lat,long,scada_status
+1,Terrace,"Doyle, Considine and Osinski",27.5502358,30.8077635,linked
+2,Way,Kassulke-Koelpin,31.49737,35.11362,not linked
+3,Crossing,"Hilll, Turner and Mohr",49.7647258,16.9050077,linked
+4,Alley,"Morar, Wisoky and Kassulke",57.5384659,25.4263618,not linked
+5,Place,Christiansen Group,39.609109,2.6362975,not linked
+6,Terrace,Wiza-Lubowitz,26.2198633,50.5329678,working on
+7,Alley,Reinger-Kuvalis,-7.5874497,110.7420464,working on
+8,Crossing,"Ruecker, Sporer and Grady",61.750154,30.6676956,not linked
+9,Avenue,"Lemke, Kassulke and Roberts",-29.8224312,27.2388161,linked
+10,Circle,Davis Group,7.0513571,14.4344853,linked
+11,Pass,"O'Hara, Fritsch and Kuhn",1.1752216,109.9973244,linked
+12,Terrace,"Abshire, Hahn and Cormier",9.7437515,1.1161166,working on
+13,Road,Koch-McDermott,11.321347,122.619095,not linked
+14,Terrace,Leuschke-Jakubowski,-5.1782884,-80.6548882,not linked
+15,Circle,Becker-O'Connell,-7.0695176,108.463214,not linked
+16,Plaza,Bogisich-Lowe,48.9728482,8.4060268,working on
+17,Way,Collier Inc,43.6953508,7.2559678,not linked
+18,Hill,"Feest, Davis and Bayer",50.6793242,3.2510427,linked
+19,Avenue,Bergnaum-Lubowitz,44.9951298,-93.4352207,linked
+20,Terrace,Hane and Sons,-19.7809492,-63.1973233,not linked
+21,Lane,Smitham-Steuber,19.3002127,-70.2535901,linked
+22,Trail,"Gusikowski, O'Keefe and Ullrich",57.759167,16.6236443,working on
+23,Way,Dibbert-Maggio,55.9602597,38.0441437,linked
+24,Lane,Von and Sons,14.5699334,121.0204582,working on
+25,Place,Ziemann and Sons,30.835511,120.281653,linked
+26,Plaza,"Nitzsche, Witting and Schroeder",30.145729,120.589457,not linked
+27,Lane,"Berge, Barton and Denesik",19.2000657,-98.8016731,working on
+28,Trail,"Lesch, Shields and Veum",49.8135834,19.6147046,working on
+29,Hill,Wiza LLC,14.4103464,-88.9521595,linked
+30,Alley,Botsford-Langworth,28.164972,109.379021,not linked
+31,Place,"Olson, Ankunding and Schuster",-7.3474138,112.7677319,working on
+32,Road,"Gutkowski, Jones and O'Kon",51.0377956,31.8880994,linked
+33,Lane,"McClure, Morar and Schaefer",58.4542358,15.1073919,working on
+34,Court,"Leffler, Donnelly and Pagac",57.1754487,65.5492993,not linked
+35,Plaza,Grimes LLC,-12.0181443,17.4736016,working on
+36,Parkway,"Erdman, Lebsack and Cole",-7.0487503,108.5314753,linked
+37,Terrace,Boyer-Oberbrunner,27.9961123,-82.4290869,not linked
+38,Drive,"Smitham, Zboncak and Schoen",41.7260416,44.9621678,working on
+39,Terrace,"Schneider, Zboncak and Rempel",41.2699615,26.38509,not linked
+40,Road,Wiza LLC,38.143169,117.497651,working on
+41,Park,Willms Inc,59.1536477,10.2212404,working on
+42,Street,"Waelchi, Senger and Dooley",50.7224545,19.4350533,linked
+43,Point,Torphy-Pouros,18.4907917,-69.9603742,working on
+44,Plaza,Quitzon-Hirthe,32.265208,91.677053,working on
+45,Point,"Huel, Bruen and Kautzer",32.28786,-115.1046436,not linked
+46,Crossing,Skiles-Johnson,33.253142,112.64751,working on
+47,Alley,"Barrows, Nitzsche and Jacobson",2.7991084,44.0793911,not linked
+48,Pass,"Buckridge, Steuber and Stamm",-6.9667234,108.6699011,linked
+49,Street,"Beier, Steuber and Johnson",-18.8200534,49.0652963,not linked
+50,Drive,"Pacocha, Dicki and Barrows",-20.139651,57.5617693,not linked
+51,Circle,Schimmel-Hickle,54.4026022,22.0193739,working on
+52,Road,Bogan Group,28.228271,104.565145,not linked
+53,Crossing,Nienow-Daugherty,42.930418,1.7243511,working on
+54,Lane,"Armstrong, Connelly and Ward",0.573336,-79.643631,linked
+55,Crossing,Schmeler Inc,-4.163679,18.8076195,not linked
+56,Trail,"Schuppe, Johnson and Veum",-8.2310152,111.5766407,not linked
+57,Plaza,Lockman and Sons,5.5067818,102.9746601,not linked
+58,Crossing,"Stracke, Lakin and Lubowitz",46.2686934,95.2732977,linked
+59,Circle,Russel LLC,51.5275957,17.2712122,not linked
+60,Avenue,Crooks LLC,-7.783297,110.363649,not linked
+61,Avenue,Mayert LLC,51.532126,92.8882656,linked
+62,Circle,Pfannerstill-Zboncak,30.674362,107.803911,working on
+63,Court,Weimann Group,-8.3307,113.4145,not linked
+64,Way,Leffler LLC,25.9923398,89.2847251,linked
+65,Pass,Jacobi LLC,16.4359827,104.3559158,linked
+66,Plaza,"Nolan, Moore and Ferry",61.2318649,26.1741559,working on
+67,Avenue,Bruen Group,6.1244023,100.3674801,working on
+68,Crossing,"Deckow, Schamberger and Rippin",36.599744,101.803717,working on
+69,Junction,Dickens Inc,46.8615704,9.5262115,linked
+70,Court,"Hettinger, Pfannerstill and Roob",-8.091221,111.9641728,linked
+71,Court,Kuhlman-Hahn,-20.3656796,57.6424881,working on
+72,Park,Bashirian-Balistreri,28.848613,116.868597,working on
+73,Center,Botsford-Jaskolski,-7.4111241,111.1182544,linked
+74,Junction,"Hintz, Grady and Boyer",34.8838824,136.870408,working on
+75,Park,Lowe Inc,51.43341,-114.03528,linked
+76,Alley,Hayes-Corwin,48.0930765,-4.33096,not linked
+77,Street,Muller and Sons,-6.8775,111.8752,working on
+78,Plaza,Schumm-Hettinger,-6.7618,111.046,working on
+79,Pass,Kiehn Group,14.0879302,44.6724469,linked
+80,Pass,"Cremin, Nicolas and Fritsch",-26.360436,28.451357,not linked
+81,Circle,Wolff-Lowe,22.656408,114.019351,working on
+82,Point,Langosh-Hagenes,36.6714007,136.7941217,working on
+83,Parkway,Moore Inc,22.581293,113.896129,working on
+84,Terrace,Rowe-Daniel,23.696329,117.433977,not linked
+85,Court,Blick Inc,34.569474,112.83208,not linked
+86,Center,Stoltenberg-Tillman,45.2110039,14.5569253,not linked
+87,Way,Tromp-Schneider,17.4030206,104.8337879,working on
+88,Center,Hand LLC,-9.5961614,119.5752764,not linked
+89,Trail,Yost-Denesik,-8.2922696,120.4415242,linked
+90,Terrace,Hansen LLC,6.0536421,121.0004951,linked
+91,Pass,"Jaskolski, Macejkovic and Turcotte",-8.7035662,116.2245553,linked
+92,Terrace,Boyle-Witting,31.067673,121.567646,working on
+93,Terrace,Schamberger-Skiles,51.669945,16.5376529,working on
+94,Road,Luettgen and Sons,18.594395,-72.3074326,linked
+95,Alley,"Daugherty, Botsford and Douglas",-33.326671,-60.2336692,linked
+96,Circle,Nikolaus-Littel,53.1405147,21.0511534,working on
+97,Way,Howell Inc,-6.8370422,-47.2142417,not linked
+98,Street,"Wolf, Lynch and Johnson",37.5544156,56.9267259,linked
+99,Parkway,Schultz-Ebert,34.3983716,-2.8935028,working on
+100,Circle,Ryan-Mann,-34.4753246,-58.586937,linked

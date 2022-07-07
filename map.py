@@ -1,23 +1,44 @@
 from bokeh.plotting import figure, output_file, show
 from bokeh.tile_providers import CARTODBPOSITRON, get_provider, OSM, STAMEN_TERRAIN_RETINA
-from bokeh.models import ColumnDataSource, Grid, LinearAxis, Plot, Text
+from bokeh.models import ColumnDataSource
 from pyproj import Transformer
 import numpy as np
 import pandas as pd
 
-output_file("map.html")
-
-tile_provider = get_provider(OSM)
-
-INIT_LONG = -80.5
-FINAL_LONG = -79.85
-INIT_LAT = -2.30
-FINAL_LAT = -2.00
-
 WINDOW_PADDING = 5000
 
+TOOLTIPS = [
+        ("Codigo", "@text"),
+        ("Nombre", "@name"),
+        ("Tipo", "@type")
+    ]
+
+
+#Protocol type dictionary, used to represent a different color for every protocol
+DICT_COLOR = {
+    'MODBUS SERIAL': 'cyan',
+    '4-20': 'black',
+    'DNP3': 'black',
+    'DNP3 SERIAL': 'orange',
+    'DNP3 TCP': 'red',
+    'MODBUS TCP': 'green',
+    'ETHERNET': 'blue'
+}
+
+
+#Connection status dictionary, used to represent the form of the location
+DICT_STATUS_MARKER = {
+    'linked': 'circle',
+    'not linked': 'x',
+    'working on': 'triangle'
+}
+
+
+#Object to transform from Long, Lat to X, Y
 longlat_to_mercator = Transformer.from_crs('epsg:4326','epsg:3857', always_xy=True)
 
+
+#Defining the coordenates for the initial plot view
 def get_square_window(x, y):
     x_max = np.max(x)
     x_min = np.min(x)
@@ -39,19 +60,40 @@ def get_square_window(x, y):
 
 def get_locations(path):
     locations = pd.read_csv(path)
-    locations = locations[['id','name','lat','long']]
+    locations = locations[['id','name','lat','long','type_id','scada_status']]
     locations = locations.dropna(subset = ['lat'])
     locations = locations.set_index('id')
     text = []
+    name = []
+    type_location = []
+    status = []
     x = []
     y = []
+    lat = []
+    long = []
     for index, row in locations.iterrows():
         if type(row[2]) == float and not(row[2] is None):
             text.append(index)
+            name.append(row[0])
+            type_location.append(row[3])
+            status.append(row[4])
+            lat.append(row[1])
+            long.append(row[2])
             xi, yi = longlat_to_mercator.transform(row[2], row[1])
             x.append(xi)
             y.append(yi)
-    return text, x, y
+    
+    #Create a Bokeh data source to plot the locations
+    source_location = ColumnDataSource(dict(
+        x=x, 
+        y=y, 
+        text=text, 
+        name=name, 
+        type=type_location,
+        marker=[DICT_STATUS_MARKER[s] for s in status]
+    ))
+
+    return x, y, source_location
 
 
 def get_links(path_locations, path_assets, path_links):
@@ -68,59 +110,114 @@ def get_links(path_locations, path_assets, path_links):
     df = pd.merge(locations, assets, left_index=True, right_index=True)
 
     links = pd.read_csv(path_links)
-    links = links[['id','equip1_slave_id','equip2_master_id','link_protocol','link_type']]
-    links = links.dropna(subset = ['equip1_slave_id','equip2_master_id','link_type'])
+    links = links[['id','equip1_slave_id','equip2_master_id','link_protocol','link_type','equip1_slave_name','equip2_master_name']]
+    links = links.dropna(subset = ['equip1_slave_id','equip2_master_id','link_type','link_protocol'])
 
-    type = []
+    protocol_radio = []
+    id_radio = []
+    name_radio = []
+    type_radio = []
     x1 = []
     y1 = []
     x2 = []
     y2 = []
+
+    protocol_other = []
+    id_other = []
+    name_other = []
+    type_other = []
+    x = []
+    y = []
+
     for index, row in links.iterrows():
         if df[df['id']==row[1]]['long'].values.any() and df[df['id']==row[2]]['long'].values.any():
-            type.append(row[4])
+            if 'radio' in row[4]:
+                type_radio.append(row[4])
+                protocol_radio.append(row[3])
+                id_radio.append(row[0])
+                name_radio.append("Enlace: " + row[5] + " -> " + row[6])
+                xi, yi = longlat_to_mercator.transform(df[df['id']==row[1]]['long'].values, df[df['id']==row[1]]['lat'].values)
+                x1.append(xi)
+                y1.append(yi)
 
-            xi, yi = longlat_to_mercator.transform(df[df['id']==row[1]]['long'].values, df[df['id']==row[1]]['lat'].values)
-            x1.append(xi)
-            y1.append(yi)
+                xi, yi = longlat_to_mercator.transform(df[df['id']==row[2]]['long'].values, df[df['id']==row[2]]['lat'].values)
+                x2.append(xi)
+                y2.append(yi)
+            else:
+                type_other.append(row[4])
+                protocol_other.append(row[3])
+                id_other.append(row[0])
+                name_other.append("Enlace: " + row[5])
+                xi, yi = longlat_to_mercator.transform(df[df['id']==row[1]]['long'].values, df[df['id']==row[1]]['lat'].values)
+                x.append(xi)
+                y.append(yi)
+            
+    #Create a Bokeh data source to plot radio links
+    source_radio_link = ColumnDataSource(dict(
+        xs=[[x1[i][0], x2[i][0]] for i in range(len(x1))], 
+        ys=[[y1[i][0], y2[i][0]] for i in range(len(y1))],
+        text=id_radio,
+        type=type_radio, 
+        name=name_radio, 
+        color=[DICT_COLOR[p] for p in protocol_radio]
+    ))
 
-            xi, yi = longlat_to_mercator.transform(df[df['id']==row[2]]['long'].values, df[df['id']==row[2]]['lat'].values)
-            x2.append(xi)
-            y2.append(yi)
+    #Create a Bokeh data source to plot other communication links
+    source_other_link = ColumnDataSource(dict(
+        x=[x[i][0] for i in range(len(x))], 
+        y=[y[i][0] for i in range(len(y))],
+        text=id_other,
+        type=type_other, 
+        name=name_other, 
+        color=[DICT_COLOR[p] for p in protocol_other]
+    ))
 
-    return type, x1, y1, x2, y2
+    return source_radio_link, source_other_link
 
 
-def run():
+def run(folder_path):
     
-    text, x, y = get_locations('./data/locations.csv')
+    output_file(folder_path + "map.html")
 
-    type, x1, x2, y1, y2 = get_links('./data/locations.csv','./data/assets.csv','./data/links.csv')
+    tile_provider = get_provider(CARTODBPOSITRON)
+
+    x, y, source_location = get_locations(folder_path + 'locations.csv')
+
+    source_radio_link, source_other_link = get_links(folder_path + 'locations.csv', 
+                                                    folder_path + 'assets.csv',
+                                                    folder_path + 'links.csv')
 
     x_range, y_range = get_square_window(x, y)
 
-    source = ColumnDataSource(dict(x=x, y=y, text=text))
-    glyph = Text(x="x", y="y", text="text", angle=0, text_color="black", text_font_size='10px')
+    plot = figure(x_range=x_range, y_range=y_range,
+            x_axis_type="mercator", y_axis_type="mercator",
+            plot_width=1200, plot_height=600,
+            tooltips=TOOLTIPS)
 
-    p = figure(x_range=x_range, y_range=y_range, x_axis_type="mercator", y_axis_type="mercator", plot_width=1200, plot_height=600)
-    p.add_tile(tile_provider)
-    p.circle(x=x, y=y, size=15, color='blue')
-    p.add_glyph(source, glyph)
+    plot.add_tile(tile_provider)
 
-    x_circle = []
-    y_circle = []
+    #Plotting radio links
+    plot.multi_line(xs='xs', ys='ys', line_width=2, line_color='color', source=source_radio_link)
 
-    for i in range(len(type)):
+    #Plotting other communications
+    plot.circle(x='x', y='y', size=20, alpha=0.5, color='color', source=source_other_link)
 
-        if 'radio' in type[i]:
-            p.line([x1[i], y1[i]],[x2[i], y2[i]], color='black')
-        else:
-            x_circle.append(x1[i])
-            y_circle.append(y1[i])
-    
-    p.circle(x=x_circle, y=y_circle, size=20, alpha=0.5, color='orange')
-    show(p)
+    #Plotting locations
+    plot.scatter(x='x', y='y', size=10, color='blue', alpha=0.7, marker='marker', source=source_location)
+
+    show(plot)
 
 
 if __name__ == '__main__':
-    run()
+    print('--Plotting map--')
+    mode = int(input('[1] Example or [2] Data: '))
+    if mode == 1:
+        print('Plotting example ...')
+        run('./example/')
+        print('Example plotted!')
+    elif mode == 2:
+        print('Plotting map with data ...')
+        run('./data/')
+        print('Map plotted!')
+    else:
+        print('--Ending program--')
